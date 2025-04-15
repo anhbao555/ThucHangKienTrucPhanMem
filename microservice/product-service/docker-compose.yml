@@ -1,0 +1,12 @@
+  product-service:
+    build: ./product-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - product-mongo
+
+  product-mongo:
+    image: mongo:6
+    container_name: product-mongo
+    ports:
+      - "27017:27017"
