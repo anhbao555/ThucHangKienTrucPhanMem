@@ -1,0 +1,22 @@
+{
+  "groups": [
+    {
+      "name": "rsa",
+      "type": "iuh.fit.se.userservice.configs.RSAKeyRecord",
+      "sourceType": "iuh.fit.se.userservice.configs.RSAKeyRecord"
+    }
+  ],
+  "properties": [
+    {
+      "name": "rsa.rsa-private-key",
+      "type": "java.security.interfaces.RSAPrivateKey",
+      "sourceType": "iuh.fit.se.userservice.configs.RSAKeyRecord"
+    },
+    {
+      "name": "rsa.rsa-public-key",
+      "type": "java.security.interfaces.RSAPublicKey",
+      "sourceType": "iuh.fit.se.userservice.configs.RSAKeyRecord"
+    }
+  ],
+  "hints": []
+}
