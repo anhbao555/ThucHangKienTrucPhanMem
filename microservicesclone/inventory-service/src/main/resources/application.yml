@@ -1,0 +1,17 @@
+spring:
+  data:
+    mongodb:
+      host: mongo
+      port: 27017
+      database: inventorydb
+  application:
+    name: inventory-service
+
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest  # Username mặc định
+    password: guest  # Password mặc định
+
+server:
+  port: 8085

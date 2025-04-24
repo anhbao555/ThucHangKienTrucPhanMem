@@ -1,0 +1,111 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: product-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/products/**
+
+        - id: order-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/orders/**
+
+        - id: customer-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/customers/**
+
+        - id: payment-service
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/payments/**
+          filters:
+            - name: Retry
+              args:
+                name: paymentService
+            - name: CircuitBreaker
+              args:
+                name: paymentService
+                fallbackUri: forward:/fallback/payments
+
+        - id: inventory-service
+          uri: http://localhost:8085
+          predicates:
+            - Path=/api/inventory/**
+          filters:
+            - name: Retry
+              args:
+                name: inventoryService
+            - name: CircuitBreaker
+              args:
+                name: inventoryService
+                fallbackUri: forward:/fallback/inventories
+
+        - id: shipping-service
+          uri: http://localhost:8086
+          predicates:
+            - Path=/api/shipping/**
+          filters:
+            - name: Retry
+              args:
+                name: shippingService
+            - name: CircuitBreaker
+              args:
+                name: shippingService
+                fallbackUri: forward:/fallback/shipping
+
+      default-filters:
+        - AddResponseHeader=X-Gateway, SpringCloudGateway
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      paymentService:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+      inventoryService:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+      shippingService:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+
+  retry:
+    instances:
+      paymentService:
+        maxAttempts: 3
+      inventoryService:
+        maxAttempts: 3
+      shippingService:
+        maxAttempts: 3
+
+  ratelimiter:
+    instances:
+      paymentService:
+        limitForPeriod: 5
+        limitRefreshPeriod: 1s
+      inventoryService:
+        limitForPeriod: 5
+        limitRefreshPeriod: 1s
+      shippingService:
+        limitForPeriod: 5
+        limitRefreshPeriod: 1s
+
+  timelimiter:
+    instances:
+      paymentService:
+        timeoutDuration: 4s
+      inventoryService:
+        timeoutDuration: 4s
+      shippingService:
+        timeoutDuration: 4s

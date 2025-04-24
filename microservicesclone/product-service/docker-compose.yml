@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  product-mongo:
+    image: mongo:6
+    container_name: product-mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - microservices-network
+
+  product-service:
+    build: .
+    image: product-service
+    container_name: product-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - product-mongo
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://product-mongo:27017/productdb  # Kết nối đến MongoDB bằng tên service
+    networks:
+      - microservices-network  # Đảm bảo sử dụng mạng chung để các container có thể giao tiếp
+
+networks:
+  microservices-network:
+    driver: bridge  # Tạo mạng bridge để các container có thể giao tiếp với nhau
