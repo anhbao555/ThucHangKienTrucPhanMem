@@ -1,0 +1,17 @@
+spring:
+  data:
+    mongodb:
+      host: localhost  # Tên service MongoDB trong Docker Compose
+      port: 27017
+      database: productdb
+  application:
+    name: product-service
+
+  rabbitmq:
+    host: localhost  # Tên service RabbitMQ trong Docker Compose
+    port: 5672
+    username: guest
+    password: guest
+
+server:
+  port: 8081
